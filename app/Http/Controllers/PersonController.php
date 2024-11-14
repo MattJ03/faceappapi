@@ -49,6 +49,7 @@ class PersonController extends Controller
                'married' => $request->married,
 
            ]));
+           return response()->json($person);
     }
 
     /**
@@ -72,7 +73,25 @@ class PersonController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
+            'age' => 'required|integer|max:150',
+            'hobby' => 'nullable|string|max:250',
+            'gender' => 'required|in:male,female',
+            'married' => 'required|boolean'
+        ]);
+
+        $person = Person::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'age' => $request->age,
+            'hobby' => $request->hobby,
+            'gender' => $request->gender,
+            'married' => $request->married,
+        ]);
+
+        return response()->json($person);
     }
 
     /**
@@ -80,6 +99,11 @@ class PersonController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $person = Person::find($id);
+        if(!$person) {
+            return response()->json(['error' => 'Person not found']);
+        }
+        $person->delete();
+        return response()->json(['success' => 'Person deleted successfully']);
     }
 }
