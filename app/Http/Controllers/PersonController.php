@@ -22,7 +22,8 @@ class PersonController extends Controller
      */
     public function create()
     {
-        //
+        $person = Person::create();
+        return response()->json($person);
     }
 
     /**
